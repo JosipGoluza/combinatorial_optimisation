@@ -1,0 +1,22 @@
+Example of file encoding:
+IS_IS20_MC300_MW150_CWR0.8_CWCuni_GR1_bal.txt
+- First letters point to the parameter that is measured and other pairs point to parameter and its value
+
+Default values:
+1. instance size(IS)(# of items) - 20
+2. maximum cost(MC) - 300
+3. maximum weight(MW) - 150
+4. knapsack capacity to the total weight ratio(CWR) - 0.8
+5. cost/weight correlation(CWC) - uni
+6. granularity(GR) - 1/bal (granularity exponent k, the majority of items)
+
+Different values:
+1. instance size (# of items) - 10, 15, 20, 25, 30
+2. maximum cost - 25, 200, 400, 700, 1000
+3. maximum weight - 25, 100, 200, 500, 1000
+4. knapsack capacity to the total weight ratio - 0.1, 0.3, 0.5, 0.7, 0.95
+5. cost/weight correlation - uni,corr,strong
+6. granularity - 2 4 7 10/light, heavy
+
+If I am testing robustness file with permutated instances will look like:
+PERM_IS20_MC300_MW150_CWR0.8_CWCuni_GR1_bal_1.txt

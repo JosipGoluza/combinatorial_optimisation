@@ -1,0 +1,9 @@
+n,type,runtime_microseconds,maximum_cost,maximum_weight,capacity_to_weight_ratio,cost_weight_correlation,granularity_exponent,majority_of_items
+20,GR,750020,300,150,0.8,uni,2,heavy
+20,GR,755221,300,150,0.8,uni,2,light
+20,GR,801163,300,150,0.8,uni,4,heavy
+20,GR,799202,300,150,0.8,uni,4,light
+20,GR,750848,300,150,0.8,uni,7,heavy
+20,GR,760176,300,150,0.8,uni,7,light
+20,GR,1098056,300,150,0.8,uni,10,heavy
+20,GR,726987,300,150,0.8,uni,10,light

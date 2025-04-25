@@ -1,0 +1,4 @@
+type,measured_time,variable_number,clauses_number,average_error,population_size,tournament_size,num_elites,num_generations,parameter_changed,max_attempts,mutation_rate,crossover_rate
+R,42206,20,78,0.000123073,500,3,3,300,none,50,0.03,0.9
+R,246699,50,201,0,500,3,3,300,none,50,0.03,0.9
+R,64160,75,310,0,500,3,3,300,none,50,0.03,0.9

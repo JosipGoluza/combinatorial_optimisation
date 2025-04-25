@@ -1,0 +1,5 @@
+type,variable_number,clauses_number,measured_time,average_error,max_attempts
+N,75,310,32106,0,10
+N,75,310,92639,0,50
+N,75,310,147192,0,100
+N,75,310,192232,0,150

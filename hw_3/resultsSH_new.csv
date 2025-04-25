@@ -1,0 +1,11 @@
+n,type,measured_time_microseconds,maximum_cost,maximum_weight,capacity_to_weight_ratio,cost_weight_correlation,granularity_exponent,majority_of_items,average_error,maximum_error
+20,MC,3729,25,150,0.8,uni,1,bal,0.00619152,0.0452675
+20,MC,2711,200,150,0.8,uni,1,bal,0.00605687,0.0465608
+20,MC,2961,400,150,0.8,uni,1,bal,0.00578456,0.0463945
+20,MC,3050,700,150,0.8,uni,1,bal,0.00577009,0.0465434
+20,MC,2973,1000,150,0.8,uni,1,bal,0.00573817,0.0465018
+20,MW,3145,300,25,0.8,uni,1,bal,0.00573855,0.0501382
+20,MW,5898,300,100,0.8,uni,1,bal,0.00603727,0.0466736
+20,MW,2987,300,200,0.8,uni,1,bal,0.00598328,0.0466736
+20,MW,2859,300,500,0.8,uni,1,bal,0.0059417,0.0466736
+20,MW,3289,300,1000,0.8,uni,1,bal,0.00600625,0.0466736

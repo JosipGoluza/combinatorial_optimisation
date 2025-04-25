@@ -1,0 +1,6 @@
+n,type,measured_time_microseconds,maximum_cost,maximum_weight,capacity_to_weight_ratio,cost_weight_correlation,granularity_exponent,majority_of_items,average_error,maximum_error
+20,CWR,2997,300,150,0.1,uni,1,bal,0.00600065,0.0462898
+20,CWR,2871,300,150,0.3,uni,1,bal,0.00600065,0.0462898
+20,CWR,2984,300,150,0.5,uni,1,bal,0.00600065,0.0462898
+20,CWR,2965,300,150,0.7,uni,1,bal,0.00600065,0.0462898
+20,CWR,3028,300,150,0.95,uni,1,bal,0.00600065,0.0462898

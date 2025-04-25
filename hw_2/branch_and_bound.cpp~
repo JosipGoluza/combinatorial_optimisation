@@ -1,0 +1,162 @@
+#include "branch_and_bound.h"
+
+#include <algorithm>
+#include <chrono>
+#include <fstream>
+#include <iostream>
+#include <vector>
+
+#include "file_utils.h"
+#include "main.h"
+#include "models.h"
+
+struct Instance;
+
+const std::vector<std::pair<std::string, std::string> > listOfNKPairsBAB = {
+    {"NK4_inst.dat", "NK4_sol.dat"},
+    {"NK10_inst.dat", "NK10_sol.dat"},
+    {"NK15_inst.dat", "NK15_sol.dat"},
+    {"NK20_inst.dat", "NK20_sol.dat"},
+    {"NK22_inst.dat", "NK22_sol.dat"},
+    {"NK25_inst.dat", "NK25_sol.dat"},
+    {"NK27_inst.dat", "NK27_sol.dat"},
+    {"NK30_inst.dat", "NK30_sol.dat"},
+};
+
+const std::vector<std::pair<std::string, std::string> > listOfZKCPairsBAB = {
+    {"ZKC4_inst.dat", "ZKC4_sol.dat"},
+    {"ZKC10_inst.dat", "ZKC10_sol.dat"},
+    {"ZKC15_inst.dat", "ZKC15_sol.dat"},
+    {"ZKC20_inst.dat", "ZKC20_sol.dat"},
+    {"ZKC22_inst.dat", "ZKC22_sol.dat"},
+    {"ZKC25_inst.dat", "ZKC25_sol.dat"},
+    {"ZKC27_inst.dat", "ZKC27_sol.dat"},
+    {"ZKC30_inst.dat", "ZKC30_sol.dat"},
+};
+
+const std::vector<std::pair<std::string, std::string> > listOfZKWPairsBAB = {
+    {"ZKW4_inst.dat", "ZKW4_sol.dat"},
+    {"ZKW10_inst.dat", "ZKW10_sol.dat"},
+    {"ZKW15_inst.dat", "ZKW15_sol.dat"},
+    {"ZKW20_inst.dat", "ZKW20_sol.dat"},
+    {"ZKW22_inst.dat", "ZKW22_sol.dat"},
+    {"ZKW25_inst.dat", "ZKW25_sol.dat"},
+    {"ZKW27_inst.dat", "ZKW27_sol.dat"},
+    {"ZKW30_inst.dat", "ZKW30_sol.dat"},
+};
+
+ResultBAB goThroughExamplesBAB(const InstanceSize &instances) {
+    long long total_duration = 0;
+
+    for (const auto &example: instances.exampleList.instance) {
+        constexpr int NUM_RUNS = 2;
+        long long current_duration = 0;
+        for (int run = 0; run < NUM_RUNS; ++run) {
+            auto start = std::chrono::high_resolution_clock::now();
+            if (const auto result = calculateBranchAndBound(example);
+                result != instances.exampleList.solutionMap.at(example.ID)) {
+                std::cout << "Error found in instance " << example.ID << std::endl;
+            }
+            auto end = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+            current_duration += duration.count();
+        }
+        total_duration += current_duration / NUM_RUNS;
+    }
+
+    // calculcate to microseconds
+    long long avg_duration_ms = (total_duration) / 1000;
+
+    return {
+        instances.n,
+        instances.type,
+        avg_duration_ms,
+    };
+}
+
+std::vector<ResultBAB> goThroughFilesBranchAndBound(const std::vector<InstanceSize> &input) {
+    std::vector<ResultBAB> results;
+    for (const auto &instances: input) {
+        results.push_back(goThroughExamplesBAB(instances));
+    }
+    return results;
+}
+
+void createCsvBranchAndBound(const std::vector<ResultBAB> &combinedResults) {
+    std::ofstream file("data/resultsBAB.csv");
+    file << "n,type,runtime_microseconds\n";
+
+    for (const auto &result: combinedResults) {
+        file << result.n << ","
+                << instanceTypeToString(result.type) << ","
+                << result.measuredTime << "\n";
+    }
+}
+
+void do_branch_and_bound() {
+    const auto inputNK = readAllFiles(InstanceType::NK, listOfNKPairsBAB);
+    const auto inputZKC = readAllFiles(InstanceType::ZKC, listOfZKCPairsBAB);
+    const auto inputZKW = readAllFiles(InstanceType::ZKW, listOfZKWPairsBAB);
+
+    auto resultsNK = goThroughFilesBranchAndBound(inputNK);
+    auto resultsZKC = goThroughFilesBranchAndBound(inputZKC);
+    auto resultsZKW = goThroughFilesBranchAndBound(inputZKW);
+
+    std::vector<ResultBAB> combinedResults;
+    combinedResults.insert(combinedResults.end(), resultsNK.begin(), resultsNK.end());
+    combinedResults.insert(combinedResults.end(), resultsZKC.begin(), resultsZKC.end());
+    combinedResults.insert(combinedResults.end(), resultsZKW.begin(), resultsZKW.end());
+
+    createCsvBranchAndBound(combinedResults);
+}
+
+int calculateBranchAndBound(const Instance &instance) {
+    int currently_best_solution = 0;
+
+    const auto optimalSolution = knapsackBranchAndBound(
+        instance.capacity,
+        instance.items,
+        0,
+        0,
+        currently_best_solution
+    );
+
+    return optimalSolution;
+}
+
+int knapsackBranchAndBound(int capacity, const std::vector<Item> &items, int index, int currentValue,
+                           int &currentlyBestSolution) {
+    if (index == items.size() || capacity <= 0) {
+        return 0;
+    }
+
+    int upperBound = currentValue + getSumOfUndecidedItems(items, index);
+
+    if (upperBound < currentlyBestSolution) {
+        return 0;
+    }
+
+    if (items[index].weight > capacity) {
+        auto value = knapsackBranchAndBound(
+            capacity, items, index + 1, currentValue, currentlyBestSolution);
+        return value;
+    } else {
+        auto valueWithout = knapsackBranchAndBound(
+            capacity, items, index + 1, currentValue, currentlyBestSolution);
+        auto valueWith = knapsackBranchAndBound(
+            capacity - items[index].weight, items, index + 1, currentValue + items[index].cost, currentlyBestSolution);
+        int bestValue = std::max(valueWithout, items[index].cost + valueWith);
+        if (bestValue > currentlyBestSolution) {
+            currentlyBestSolution = bestValue;
+        }
+        return bestValue;
+    }
+}
+
+int getSumOfUndecidedItems(const std::vector<Item> &items, int index) {
+    int sum = 0;
+    for (int i = index; i < items.size(); ++i) {
+        sum += items[i].cost;
+    }
+    return sum;
+}

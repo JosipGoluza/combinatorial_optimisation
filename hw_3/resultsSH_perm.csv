@@ -1,0 +1,6 @@
+n,type,measured_time_microseconds,maximum_cost,maximum_weight,capacity_to_weight_ratio,cost_weight_correlation,granularity_exponent,majority_of_items,average_error,maximum_error,perm_num
+20,PERM,2855,300,150,0.8,uni,1,bal,0.00600065,0.0462898,1
+20,PERM,4525,300,150,0.8,uni,1,bal,0.00600065,0.0462898,2
+20,PERM,2638,300,150,0.8,uni,1,bal,0.00600065,0.0462898,3
+20,PERM,2653,300,150,0.8,uni,1,bal,0.00600065,0.0462898,4
+20,PERM,5045,300,150,0.8,uni,1,bal,0.00600065,0.0462898,5
